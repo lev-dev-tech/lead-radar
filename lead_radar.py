@@ -28,8 +28,10 @@ PORTFOLIO = "lev-dev-tech.github.io"
 
 # Куда класть заметку с лидами (хранилище Obsidian)
 OBSIDIAN_NOTE = Path(r"D:\obsidian\проекты\1\Горячие лиды (авто).md")
-# Приложение-дашборд (открывается двойным кликом в браузере)
+# Приложение-дашборд (открывается двойным кликом в браузере) — локальное, с «Ответами»
 HTML_FILE = HERE / "Лиды.html"
+# Публичная версия для GitHub Pages: только «Заказы», с паролем, БЕЗ личных переписок
+PUBLIC_FILE = HERE / "docs" / "index.html"
 
 # --- Классификация заказа по теме -------------------------------------------
 CATEGORIES = [
@@ -537,6 +539,151 @@ renderOrders(); renderInbox();
 </html>"""
 
 
+PUBLIC_TEMPLATE = r"""<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="1800">
+<title>Лиды — Lev Dev</title>
+<style>
+  :root{--bg:#0f1420;--card:#1a2236;--mut:#8a97b3;--txt:#e8edf7;--acc:#4f8cff;
+        --new:#22c55e;--chip:#243050;--chipa:#4f8cff;--box:#111830;--bd:#2a3550}
+  @media (prefers-color-scheme:light){
+    :root{--bg:#f4f6fb;--card:#fff;--mut:#5a6785;--txt:#141a2b;--acc:#2f6bff;
+          --new:#16a34a;--chip:#e7ecf7;--chipa:#2f6bff;--box:#f0f3fa;--bd:#dbe2f0}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:15px/1.5 -apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  header{position:sticky;top:0;background:var(--bg);padding:16px 18px 10px;
+         border-bottom:1px solid var(--bd);z-index:5}
+  h1{margin:0 0 2px;font-size:20px}
+  .sub{color:var(--mut);font-size:13px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+  .chip{background:var(--chip);color:var(--txt);border:0;border-radius:20px;
+        padding:6px 13px;font-size:13px;cursor:pointer}
+  .chip.on{background:var(--chipa);color:#fff}
+  input[type=search]{flex:1;min-width:160px;background:var(--card);color:var(--txt);
+        border:1px solid var(--bd);border-radius:20px;padding:7px 14px;font-size:14px}
+  main{padding:16px 18px 60px;max-width:900px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+        padding:15px 16px;margin-bottom:14px}
+  .top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+  .badge{font-size:12px;font-weight:600;background:var(--chip);color:var(--acc);
+         padding:3px 9px;border-radius:8px}
+  .new{background:var(--new);color:#fff}
+  .meta{color:var(--mut);font-size:12px;margin-left:auto}
+  .contact{font-weight:600;margin:2px 0 8px}
+  .contact a{color:var(--acc);text-decoration:none}
+  .order{color:var(--mut);font-size:13.5px;white-space:pre-wrap;max-height:78px;
+         overflow:hidden;cursor:pointer}
+  .order.open{max-height:none}
+  .draftbox{background:var(--box);border:1px solid var(--bd);border-radius:10px;
+        padding:11px 12px;margin-top:10px;white-space:pre-wrap;font-size:14px}
+  .acts{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+  .btn{background:var(--acc);color:#fff;border:0;border-radius:9px;padding:8px 14px;
+       font-size:13.5px;cursor:pointer;text-decoration:none;display:inline-block}
+  .btn.ghost{background:transparent;border:1px solid var(--bd);color:var(--txt)}
+  .empty{color:var(--mut);text-align:center;padding:40px}
+  #gate{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;
+        flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px}
+  #gate input{background:var(--card);color:var(--txt);border:1px solid var(--bd);
+        border-radius:12px;padding:12px 16px;font-size:16px;text-align:center;width:220px}
+  #gate .btn{padding:11px 22px;font-size:15px}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div style="font-size:34px">🔒</div>
+  <div style="font-weight:600">Лиды — Lev Dev</div>
+  <input type="password" id="pw" placeholder="Пароль" autofocus>
+  <button class="btn" onclick="checkpw()">Войти</button>
+  <div id="err" class="sub" style="color:#ef4444;min-height:18px"></div>
+</div>
+<div id="app" style="display:none">
+<header>
+  <h1>🛰 Лиды — Lev Dev</h1>
+  <div class="sub">Обновлено __UPDATED__ · <span id="cnt"></span></div>
+  <div class="bar" id="chips"></div>
+  <div class="bar">
+    <input type="search" id="q" placeholder="Поиск по тексту, чату, контакту…">
+  </div>
+</header>
+<main id="list"></main>
+</div>
+<script>
+const PW = "__PW__";
+const DATA = __DATA__;
+function checkpw(){
+  const v=document.getElementById('pw').value;
+  if(v===PW){try{localStorage.setItem('leadpw',v)}catch(e){}; open_app();}
+  else document.getElementById('err').textContent='Неверный пароль';
+}
+document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')checkpw()});
+try{if(localStorage.getItem('leadpw')===PW) open_app();}catch(e){}
+function open_app(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  init();
+}
+let cat='Все', q='';
+function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function tg(contact){const m=(contact||'').match(/@([A-Za-z][A-Za-z0-9_]{3,31})/);
+  return m?`https://t.me/${m[1]}`:null}
+function init(){
+  const chipsEl=document.getElementById('chips');
+  const cats=['Все',...[...new Set(DATA.map(d=>d.cat))]];
+  const nNew=DATA.filter(d=>d.isNew).length;
+  document.getElementById('cnt').textContent=`заказов ${DATA.length}, новых ${nNew}`;
+  cats.forEach(c=>{const b=document.createElement('button');b.className='chip'+(c===cat?' on':'');
+    b.textContent=c;b.onclick=()=>{cat=c;[...chipsEl.children].forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');render()};chipsEl.appendChild(b)});
+  document.getElementById('q').oninput=e=>{q=e.target.value.toLowerCase();render()};
+  render();
+}
+function render(){
+  const list=document.getElementById('list');
+  let rows=DATA.filter(d=>(cat==='Все'||d.cat===cat)&&
+    (!q||(d.text+d.chat+d.contact+d.draft).toLowerCase().includes(q)));
+  if(!rows.length){list.innerHTML='<div class="empty">Ничего не найдено</div>';return}
+  list.innerHTML=rows.map((d,i)=>{
+    const t=tg(d.contact);
+    const contact=t?`<a href="${t}" target="_blank">${esc(d.contact)}</a>`:esc(d.contact);
+    const src=d.link?`<a class="btn ghost" href="${d.link}" target="_blank">Открыть заказ ↗</a>`:'';
+    return `<div class="card">
+      <div class="top"><span class="badge">${esc(d.cat)}</span>
+        ${d.isNew?'<span class="badge new">NEW</span>':''}
+        <span class="meta">${esc(d.chat)} · ${esc(d.date)}</span></div>
+      <div class="contact">${contact}</div>
+      <div class="order" onclick="this.classList.toggle('open')">${esc(d.text)}</div>
+      <div class="draftbox" id="d${i}">${esc(d.draft)}</div>
+      <div class="acts">
+        <button class="btn" onclick="copy('d'+${i},this)">📋 Копировать отклик</button>
+        ${src}
+      </div></div>`}).join('');
+}
+function copy(id,btn){navigator.clipboard.writeText(document.getElementById(id).textContent)
+  .then(()=>{const o=btn.textContent;btn.textContent='✅ Скопировано';setTimeout(()=>btn.textContent=o,1400)})}
+</script>
+</body>
+</html>"""
+
+
+def write_public_html(hot: list[dict], new_links: set[str]) -> None:
+    now = datetime.now().strftime("%d.%m.%Y %H:%M")
+    data = [{
+        "cat": CAT_RU.get(h["cat"], h["cat"]), "chat": h["chat"], "date": h["date"],
+        "contact": h["contact"], "link": h["link"], "text": h["text"],
+        "draft": h["draft"], "isNew": h["link"] in new_links,
+    } for h in hot]
+    payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    pw = json.dumps(getattr(config, "PUBLIC_PASSWORD", "lead2026"))[1:-1]
+    html = (PUBLIC_TEMPLATE.replace("__UPDATED__", now)
+            .replace("__DATA__", payload).replace("__PW__", pw))
+    PUBLIC_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PUBLIC_FILE.write_text(html, encoding="utf-8")
+
+
 def write_html(hot: list[dict], new_links: set[str], inbox: list[dict]) -> None:
     now = datetime.now().strftime("%d.%m.%Y %H:%M")
     data = []
@@ -568,6 +715,7 @@ def main() -> None:
     inbox = load_inbox()
     new_links = {h["link"] for h in hot if h["link"] and h["link"] not in seen}
     write_html(hot, new_links, inbox)
+    write_public_html(hot, new_links)
     n_new, n_all = write_note(hot, seen)
     unread = sum(1 for i in inbox if i.get("unread"))
     print(f"[radar] Готово: заказов {n_all} (новых {n_new}), переписок {len(inbox)} "

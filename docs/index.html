@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="1800">
+<title>Лиды — Lev Dev</title>
+<style>
+  :root{--bg:#0f1420;--card:#1a2236;--mut:#8a97b3;--txt:#e8edf7;--acc:#4f8cff;
+        --new:#22c55e;--chip:#243050;--chipa:#4f8cff;--box:#111830;--bd:#2a3550}
+  @media (prefers-color-scheme:light){
+    :root{--bg:#f4f6fb;--card:#fff;--mut:#5a6785;--txt:#141a2b;--acc:#2f6bff;
+          --new:#16a34a;--chip:#e7ecf7;--chipa:#2f6bff;--box:#f0f3fa;--bd:#dbe2f0}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:15px/1.5 -apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  header{position:sticky;top:0;background:var(--bg);padding:16px 18px 10px;
+         border-bottom:1px solid var(--bd);z-index:5}
+  h1{margin:0 0 2px;font-size:20px}
+  .sub{color:var(--mut);font-size:13px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+  .chip{background:var(--chip);color:var(--txt);border:0;border-radius:20px;
+        padding:6px 13px;font-size:13px;cursor:pointer}
+  .chip.on{background:var(--chipa);color:#fff}
+  input[type=search]{flex:1;min-width:160px;background:var(--card);color:var(--txt);
+        border:1px solid var(--bd);border-radius:20px;padding:7px 14px;font-size:14px}
+  main{padding:16px 18px 60px;max-width:900px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+        padding:15px 16px;margin-bottom:14px}
+  .top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+  .badge{font-size:12px;font-weight:600;background:var(--chip);color:var(--acc);
+         padding:3px 9px;border-radius:8px}
+  .new{background:var(--new);color:#fff}
+  .meta{color:var(--mut);font-size:12px;margin-left:auto}
+  .contact{font-weight:600;margin:2px 0 8px}
+  .contact a{color:var(--acc);text-decoration:none}
+  .order{color:var(--mut);font-size:13.5px;white-space:pre-wrap;max-height:78px;
+         overflow:hidden;cursor:pointer}
+  .order.open{max-height:none}
+  .draftbox{background:var(--box);border:1px solid var(--bd);border-radius:10px;
+        padding:11px 12px;margin-top:10px;white-space:pre-wrap;font-size:14px}
+  .acts{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+  .btn{background:var(--acc);color:#fff;border:0;border-radius:9px;padding:8px 14px;
+       font-size:13.5px;cursor:pointer;text-decoration:none;display:inline-block}
+  .btn.ghost{background:transparent;border:1px solid var(--bd);color:var(--txt)}
+  .empty{color:var(--mut);text-align:center;padding:40px}
+  #gate{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;
+        flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px}
+  #gate input{background:var(--card);color:var(--txt);border:1px solid var(--bd);
+        border-radius:12px;padding:12px 16px;font-size:16px;text-align:center;width:220px}
+  #gate .btn{padding:11px 22px;font-size:15px}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div style="font-size:34px">🔒</div>
+  <div style="font-weight:600">Лиды — Lev Dev</div>
+  <input type="password" id="pw" placeholder="Пароль" autofocus>
+  <button class="btn" onclick="checkpw()">Войти</button>
+  <div id="err" class="sub" style="color:#ef4444;min-height:18px"></div>
+</div>
+<div id="app" style="display:none">
+<header>
+  <h1>🛰 Лиды — Lev Dev</h1>
+  <div class="sub">Обновлено 11.07.2026 21:21 · <span id="cnt"></span></div>
+  <div class="bar" id="chips"></div>
+  <div class="bar">
+    <input type="search" id="q" placeholder="Поиск по тексту, чату, контакту…">
+  </div>
+</header>
+<main id="list"></main>
+</div>
+<script>
+const PW = "lead2026";
+const DATA = [{"cat": "Telegram-бот", "chat": "Мари про вакансии — инфобизнес", "date": "2026-07-11 15:45", "contact": "@ExGoodDunker  (отправитель: Виктория регистрация товарных знаков)", "link": "https://t.me/mari_vakansii/5847374", "text": "#ищу #техспец\n\nИщу тех спеца, который сможет интегрировать нейробота из чата джипити в телеграм \n\nПишите в лс сразу стоимость и время выполнения работы: @ExGoodDunker", "draft": "Здравствуйте, Виктория!\n\nУвидел вашу задачу - нужно завести нейробота на базе ChatGPT в Telegram, это как раз по моей части. Сделаю Telegram-бота на Python (aiogram), подключу к нему GPT через API, настрою обработку сообщений, память диалога и логику ответов под вашу тематику. Прикручу лимиты и обработку ошибок, чтобы бот не падал и не улетал в лишние расходы по токенам, при необходимости добавлю базу, оплату или админ-панель. Обычно такая интеграция занимает 2-4 дня, работаю по ТЗ с фиксированной ценой.\n\nПортфолио: lev-dev-tech.github.io\n\nНапишите, какой именно бот и под какие задачи нужен - сразу сориентирую по цене и срокам.", "isNew": false}, {"cat": "Telegram-бот", "chat": "ПОИСК ФРИЛАНСЕРОВ | ЧАТ", "date": "2026-07-11 14:34", "contact": "мг", "link": "https://t.me/poiskfreelance/4783260", "text": "Ищу разработчика бота для своего салона маникюра", "draft": "Здравствуйте!\n\nСделаю Telegram-бота для вашего салона маникюра под ключ. Внутри - онлайн-запись с выбором услуги, мастера и удобного времени, автоматические напоминания клиенту перед визитом, чтобы было меньше срывов, и база клиентов с историей записей. По желанию добавлю уведомления администратору о новых записях, сбор отзывов и повторные напоминания на следующую процедуру. Делаю ботов на aiogram, обычно такой занимает 3-5 дней, цену зафиксирую после короткого ТЗ.\n\nПортфолио: lev-dev-tech.github.io\n\nПодскажите - нужна полноценная запись с расписанием мастеров или проще бот-каталог услуг с заявкой администратору?", "isNew": false}, {"cat": "GetCourse", "chat": "Фрилансеры | Удалёнщики", "date": "2026-07-11 14:26", "contact": "Алексей Берников / @bernikovRKO", "link": "https://t.me/Freelance_grooup/561364", "text": "#ищу #техническийспециалист\n#чатбот #техспец #геткурс\n\nИщем техспеца в команду\n\nСейчас набираем людей в проект, связанный с обучением заработку на РКО. Рассматриваем людей с опытом, которые умеют работать с ботами в телеграмм, inst и геткурс.\n\nВозраст: 18+\n\nЧто нужно делать:\n\n🧠 По сценариям составлять бота, и корректировать сценарии если есть недочёты. Думать головой, а не только «по инструкции» \n⚡️ Делать автоворонки\n💳 Платежи через бота\n💬 Рассылки через бота\n📈 Аналитика цифр\n\nПриветствуется если умеете работать с тильдой (Не обязательно)\n\nОплата за проект + дальнейшее сопровождение\n\nПиши мне", "draft": "Здравствуйте, Алексей!\n\nГотов зайти техспецом в вашу команду. Возьму на себя ботов в Telegram по сценарию: соберу логику, автоворонки, приём платежей прямо через бота, рассылки и аналитику по цифрам, а сценарии буду не просто выполнять, а докручивать там, где вижу недочёты. С GetCourse и Tilda работаю, свяжу бота с ними и с базой, чтобы всё крутилось единой системой. Мне интересен именно формат с сопровождением - могу вести проект дальше, а не просто сделать и уйти.\n\nПортфолио: lev-dev-tech.github.io\n\nРасскажите, бот собираем с нуля или дорабатываем существующего, - предложу план и сроки.", "isNew": false}, {"cat": "Вебинар", "chat": "ВАКАНСИИ ИНФОБИЗНЕС | ФРИЛАНС ИНСТАГРАМ", "date": "2026-07-11 14:18", "contact": "Андрей Зозуля", "link": "https://t.me/profiwork/3390543", "text": "#Ищу #Технического Специалиста\nИщем сильного и опытного технического специалиста для проведения живого вебинара под ключ.", "draft": "Здравствуйте, Андрей!\n\nГотов взять техническое сопровождение живого вебинара под ключ. Настрою площадку и трансляцию, страницу с регистрацией, автоматическую выдачу доступов и напоминания участникам, заранее проверю всю связку, звук и картинку. На самом эфире буду на подстраховке в реальном времени - если что-то зависнет или отвалится, быстро починю, а вы спокойно ведёте вебинар. Работал с техчастью вебинаров, понимаю, где обычно всё ломается, и подстилаю соломку заранее.\n\nПортфолио: lev-dev-tech.github.io\n\nПодскажите платформу и дату вебинара - подтвержу, что всё потяну, и назову цену.", "isNew": false}, {"cat": "Mini App", "chat": "Мари про вакансии — инфобизнес", "date": "2026-07-11 12:57", "contact": "@stoppitopOlya  (отправитель: Та самая Оля)", "link": "https://t.me/mari_vakansii/5846252", "text": "#ищу #техспец #вакансия #удаленка \n\n🏎️ Ищу специалиста по Telegram и mini app для реализации проекта.\n\nНужно сделать Telegram-канал + mini app в авто-тематике:\nпродажа авто, шин, запчастей\nА так же помощь различными специалистами и инструментами для автомобилистов.\n\nЗадачи:\n– оформление и настройка канала;\n– разработка mini app\n– интеграции с CRM / базой / сайтом при необходимости.\n– с возможностью потом добавить бот с каталогом, корзиной, оплатой и т.д.\n\nТребования:\nОпыт создания Telegram mini app или сложных ботов\n\nПишите в личку 👉 @stoppitopOlya", "draft": "Здравствуйте, Оля!\n\nВаш проект - канал плюс mini app в авто-тематике - как раз то, что я делаю. Оформлю и настрою канал, соберу mini app с разделами под авто, шины и запчасти, подключу специалистов и инструменты для автомобилистов, свяжу с CRM, базой или сайтом. Структуру заложу так, чтобы потом легко нарастить полноценный бот с каталогом, корзиной и оплатой без переделки с нуля. У меня есть опыт mini app с оплатой и сложных ботов с каталогом, так что реализую без сюрпризов.\n\nПортфолио: lev-dev-tech.github.io\n\nОпишите, что должно быть на старте, а что можно вынести во вторую очередь, - предложу этапы и сроки.", "isNew": false}, {"cat": "Telegram-бот", "chat": "Вакансии для инфобизнеса | ЛИДЕРЫ МНЕНИЙ БУДУЩЕГО", "date": "2026-07-09 19:45", "contact": "@influencersoffuture", "link": "https://t.me/influencersoffuture/1992", "text": "​​#ищу #чатбот #бот #настройка #техспец #техническийспециалист #техспециалист #заказ #вакансия \n\nНовый заказ! \n\nОнлайн-опросы\n\nНужно сделать онлайн опросы, у меня есть список вопросов, нужно чтобы человек переходил в бот или куда-то по ссылке, отвечал на список вопросов. И далее результат выгружался мне в удобном формате. Нужно 3 разных опроса. Рассмотрю ваши варианты реализации. Очень дорого не смотрю. Нужно просто,но качественно.\n\nБюджет: по договоренности", "draft": "Здравствуйте!\n\nПо заказу с онлайн-опросами - сделаю. Соберу Telegram-бота (или ссылку-форму), где человек проходит 3 разных опроса по вашему списку вопросов, а результаты автоматически выгружаются вам в удобном виде - Excel, Google Sheets или прямо в личку. Сделаю понятно для пользователя: последовательные вопросы, разные типы ответов, чтобы никто не путался, плюс защиту от повторного прохождения, если нужно. По деньгам не задеру - задача несложная, важнее сделать чисто и быстро.\n\nПортфолио: lev-dev-tech.github.io\n\nСкину пару вариантов реализации - подскажите только, результат нужен одним файлом по каждому опросу или всё в одной таблице с разбивкой?", "isNew": false}, {"cat": "Telegram-бот", "chat": "Pixel | Заказы для Тех-спецов", "date": "2026-07-09 17:54", "contact": "@aleksandr_plykin  (отправитель: @pixeltechspec)", "link": "https://t.me/pixeltechspec/1203", "text": "Ребят, всем привет, ищу толковых разработчиков на Python для создания бекэнд фронтенд для сервисов, частности приложений и веб-приложений. Если есть у кого-то толковый ребята, буду признателен за рекомендацию  ✅\n@aleksandr_plykin\n\nБот с кучей заказов", "draft": "Здравствуйте, Александр!\n\nЯ Python-разработчик, делаю бэкенд и фронтенд для сервисов, приложений и веб-приложений - как раз то, что вы ищете. Собираю сервисы на Python (FastAPI), при необходимости фронт и админку, интеграции с API, базами и платежами, беру проект под ключ и довожу до рабочего результата. К срокам отношусь серьёзно, код держу чистым и понятным, чтобы дальше проект было легко развивать. Готов взять задачу целиком или подключиться к вашей команде.\n\nПортфолио: lev-dev-tech.github.io\n\nРасскажите про сервис и стек - скажу, чем могу быть полезен, и назову сроки.", "isNew": false}, {"cat": "ИИ/автоматизация", "chat": "Вакансии для инфобизнеса | ЛИДЕРЫ МНЕНИЙ БУДУЩЕГО", "date": "2026-07-09 17:18", "contact": "@influencersoffuture", "link": "https://t.me/influencersoffuture/1990", "text": "​​#ищу #ииагент #автоматизация #ai #ии #искуственныйинтеллект #вакансия #заказ \n\nНовый заказ!\n\nИИ-специалист для корпоративной консультации\n\nНужен человек, который созвонится или спишется с каждым сотрудником, разберется, чем он занимается каждый день, поймет, что можно автоматизировать, подберет подходящие нейросети и готовые промпты именно под его задачи. После этого важно объяснить каждому, как этим пользоваться, чтобы люди реально начали работать через ИИ, а не просто получили список сервисов.\n\nБюджет: 30 000 руб", "draft": "Здравствуйте!\n\nВозьмусь за внедрение ИИ для вашей команды. Спишусь или созвонюсь с каждым сотрудником, разберу, из чего состоит его рабочий день, найду, что реально можно автоматизировать, и подберу под конкретные задачи подходящие нейросети и готовые промпты. Дальше не просто отдам список сервисов, а покажу каждому на его же задачах, как этим пользоваться, чтобы люди начали работать через ИИ, а не забросили через день. Соберу всё в простую понятную инструкцию, к которой можно возвращаться.\n\nПортфолио: lev-dev-tech.github.io\n\nПодскажите, сколько сотрудников и какие отделы, - составлю план и уложусь в бюджет.", "isNew": false}];
+function checkpw(){
+  const v=document.getElementById('pw').value;
+  if(v===PW){try{localStorage.setItem('leadpw',v)}catch(e){}; open_app();}
+  else document.getElementById('err').textContent='Неверный пароль';
+}
+document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')checkpw()});
+try{if(localStorage.getItem('leadpw')===PW) open_app();}catch(e){}
+function open_app(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  init();
+}
+let cat='Все', q='';
+function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function tg(contact){const m=(contact||'').match(/@([A-Za-z][A-Za-z0-9_]{3,31})/);
+  return m?`https://t.me/${m[1]}`:null}
+function init(){
+  const chipsEl=document.getElementById('chips');
+  const cats=['Все',...[...new Set(DATA.map(d=>d.cat))]];
+  const nNew=DATA.filter(d=>d.isNew).length;
+  document.getElementById('cnt').textContent=`заказов ${DATA.length}, новых ${nNew}`;
+  cats.forEach(c=>{const b=document.createElement('button');b.className='chip'+(c===cat?' on':'');
+    b.textContent=c;b.onclick=()=>{cat=c;[...chipsEl.children].forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');render()};chipsEl.appendChild(b)});
+  document.getElementById('q').oninput=e=>{q=e.target.value.toLowerCase();render()};
+  render();
+}
+function render(){
+  const list=document.getElementById('list');
+  let rows=DATA.filter(d=>(cat==='Все'||d.cat===cat)&&
+    (!q||(d.text+d.chat+d.contact+d.draft).toLowerCase().includes(q)));
+  if(!rows.length){list.innerHTML='<div class="empty">Ничего не найдено</div>';return}
+  list.innerHTML=rows.map((d,i)=>{
+    const t=tg(d.contact);
+    const contact=t?`<a href="${t}" target="_blank">${esc(d.contact)}</a>`:esc(d.contact);
+    const src=d.link?`<a class="btn ghost" href="${d.link}" target="_blank">Открыть заказ ↗</a>`:'';
+    return `<div class="card">
+      <div class="top"><span class="badge">${esc(d.cat)}</span>
+        ${d.isNew?'<span class="badge new">NEW</span>':''}
+        <span class="meta">${esc(d.chat)} · ${esc(d.date)}</span></div>
+      <div class="contact">${contact}</div>
+      <div class="order" onclick="this.classList.toggle('open')">${esc(d.text)}</div>
+      <div class="draftbox" id="d${i}">${esc(d.draft)}</div>
+      <div class="acts">
+        <button class="btn" onclick="copy('d'+${i},this)">📋 Копировать отклик</button>
+        ${src}
+      </div></div>`}).join('');
+}
+function copy(id,btn){navigator.clipboard.writeText(document.getElementById(id).textContent)
+  .then(()=>{const o=btn.textContent;btn.textContent='✅ Скопировано';setTimeout(()=>btn.textContent=o,1400)})}
+</script>
+</body>
+</html>

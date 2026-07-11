@@ -14,6 +14,11 @@ AI_MODEL = "claude-haiku-4-5-20251001"
 NOTIFY_FROM_SESSION = "vacancy_session"
 NOTIFY_TO = "levv_ddev"
 
+# Пароль для публичного дашборда на GitHub Pages (вкладка «Заказы»).
+# Клиентская заглушка — отсекает случайных, но не серьёзная защита (виден в исходнике).
+# Публичная версия НЕ содержит вкладку «Ответы» с личными переписками.
+PUBLIC_PASSWORD = "lead2026"
+
 FOLDER_NAME = "вакансии"
 DAYS_BACK = 2
 MAX_MESSAGES_PER_CHAT = 500
