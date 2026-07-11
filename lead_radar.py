@@ -707,20 +707,26 @@ def write_html(hot: list[dict], new_links: set[str], inbox: list[dict]) -> None:
 
 
 def main() -> None:
+    cloud = os.getenv("RADAR_ACCOUNT", "lev").lower() == "burner"
     if "--no-refresh" not in sys.argv:
         refresh_parser()
-        refresh_inbox()
+        if not cloud:            # вкладка «Ответы» читает основной аккаунт — только локально
+            refresh_inbox()
     seen = load_seen()
     hot = collect_hot()
     inbox = load_inbox()
     new_links = {h["link"] for h in hot if h["link"] and h["link"] not in seen}
-    write_html(hot, new_links, inbox)
     write_public_html(hot, new_links)
-    n_new, n_all = write_note(hot, seen)
+    if cloud:
+        # В облаке нет ни локального приложения, ни Obsidian — только публичный сайт.
+        n_new, n_all = len(new_links), len(hot)
+    else:
+        write_html(hot, new_links, inbox)
+        n_new, n_all = write_note(hot, seen)
     unread = sum(1 for i in inbox if i.get("unread"))
     print(f"[radar] Готово: заказов {n_all} (новых {n_new}), переписок {len(inbox)} "
           f"(непрочитанных {unread})")
-    print(f"[radar] Приложение: {HTML_FILE}")
+    print(f"[radar] Сайт: {PUBLIC_FILE}")
 
 
 if __name__ == "__main__":

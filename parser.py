@@ -1,5 +1,6 @@
 import asyncio
 import hashlib
+import os
 import re
 import sys
 from datetime import datetime, timedelta, timezone
@@ -10,7 +11,14 @@ from openpyxl.styles import Font, Alignment, PatternFill
 
 import config
 
-SESSION = config.LEV_SESSION
+# Выбор аккаунта: локально — основной (папка «Вакансии»), в облаке (GitHub Actions)
+# — расходный (RADAR_ACCOUNT=burner), он читает каналы из config.CHANNELS.
+if os.getenv("RADAR_ACCOUNT", "lev").lower() == "burner":
+    SESSION, ACC_API_ID, ACC_API_HASH = (
+        config.BURNER_SESSION, config.BURNER_API_ID, config.BURNER_API_HASH)
+else:
+    SESSION, ACC_API_ID, ACC_API_HASH = (
+        config.LEV_SESSION, config.LEV_API_ID, config.LEV_API_HASH)
 
 RE_USERNAME = re.compile(r"@([A-Za-z][A-Za-z0-9_]{3,31})")
 RE_PHONE = re.compile(r"(?:\+?7|8)[\s\-(]*\d{3}[\s\-)]*\d{3}[\s\-]*\d{2}[\s\-]*\d{2}")
@@ -160,14 +168,14 @@ async def get_folder_peers(client):
 
 
 async def main():
-    if not config.LEV_API_ID or not config.LEV_API_HASH:
-        print("[ОШИБКА] Заполни LEV_API_ID и LEV_API_HASH в config.py")
+    if not ACC_API_ID or not ACC_API_HASH:
+        print("[ОШИБКА] Не заданы API_ID/API_HASH для выбранного аккаунта")
         sys.exit(1)
 
-    client = TelegramClient(SESSION, config.LEV_API_ID, config.LEV_API_HASH)
+    client = TelegramClient(SESSION, ACC_API_ID, ACC_API_HASH)
     await client.connect()
     if not await client.is_user_authorized():
-        print("[ОШИБКА] Сессия lev_session не авторизована. Запусти login_lev.py")
+        print(f"[ОШИБКА] Сессия {SESSION} не авторизована.")
         await client.disconnect()
         sys.exit(1)
     me = await client.get_me()

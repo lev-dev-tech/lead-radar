@@ -20,8 +20,9 @@ MSG = (
 
 
 async def main() -> None:
-    # Отправляем со второго аккаунта (@piwhip) на основной — тогда приходит пуш.
-    client = TelegramClient(config.NOTIFY_FROM_SESSION, config.API_ID, config.API_HASH)
+    # Отправляем с расходного аккаунта на основной — тогда приходит пуш.
+    client = TelegramClient(config.NOTIFY_FROM_SESSION,
+                            config.BURNER_API_ID, config.BURNER_API_HASH)
     await client.connect()
     if not await client.is_user_authorized():
         print("[notify] второй аккаунт не авторизован"); await client.disconnect(); return

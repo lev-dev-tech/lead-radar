@@ -1,0 +1,57 @@
+name: Lead Radar
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"   # каждые 3 часа
+  workflow_dispatch: {}       # можно запустить вручную из вкладки Actions
+
+permissions:
+  contents: write             # чтобы коммитить обновлённый сайт
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установить зависимости
+        run: pip install telethon openpyxl
+
+      - name: Создать credentials.py из секретов
+        run: |
+          cat > credentials.py <<EOF
+          LEV_API_ID = 0
+          LEV_API_HASH = ""
+          BURNER_API_ID = ${{ secrets.BURNER_API_ID }}
+          BURNER_API_HASH = "${{ secrets.BURNER_API_HASH }}"
+          BURNER_PHONE = "${{ secrets.BURNER_PHONE }}"
+          ANTHROPIC_API_KEY = ""
+          EOF
+
+      - name: Восстановить сессию расходного аккаунта
+        run: echo "${{ secrets.BURNER_SESSION_B64 }}" | base64 -d > burner_session.session
+
+      - name: Обновить заказы и собрать сайт
+        env:
+          RADAR_ACCOUNT: burner
+        run: python lead_radar.py
+
+      - name: Прислать уведомление в Telegram
+        continue-on-error: true
+        run: python notify.py
+
+      - name: Закоммитить обновлённый сайт
+        run: |
+          git config user.name "lead-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/index.html
+          git diff --staged --quiet || git commit -m "auto: обновление лидов $(date -u +%Y-%m-%d\ %H:%M)"
+          git push
