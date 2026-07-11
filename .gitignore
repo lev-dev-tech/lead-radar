@@ -1,0 +1,27 @@
+# === СЕКРЕТЫ — НИКОГДА не коммитить и не заливать на публичный сервер ===
+# Файлы сессий = полный доступ к твоему Telegram. Утекут - угонят аккаунт.
+*.session
+*.session-journal
+# credentials.py содержит api_hash и ключи
+credentials.py
+secrets.py
+.env
+qr_login.png
+qr_lev.png
+qr_test.png
+
+# === Личные данные / рабочие файлы ===
+inbox.json
+seen_leads.json
+drafts_override.json
+вакансии_техспец.xlsx
+*.xlsx
+Лиды.html
+radar_log.txt
+bot.log
+
+# === Служебное ===
+.venv/
+__pycache__/
+*.pyc
+.claude/
