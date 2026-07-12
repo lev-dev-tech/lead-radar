@@ -62,7 +62,7 @@
 <div id="app" style="display:none">
 <header>
   <h1>🛰 Лиды — Lev Dev</h1>
-  <div class="sub">Обновлено 12.07.2026 02:32 · <span id="cnt"></span></div>
+  <div class="sub">Обновлено 12.07.2026 05:55 · <span id="cnt"></span></div>
   <div class="bar" id="chips"></div>
   <div class="bar">
     <input type="search" id="q" placeholder="Поиск по тексту, чату, контакту…">
@@ -72,7 +72,7 @@
 </div>
 <script>
 const PW = "lead2026";
-const DATA = [{"cat": "Telegram-бот", "chat": "GetClient | Фриланс вакансии", "date": "2026-07-11 14:31", "contact": "@other_digital_bot  (отправитель: @GetClient)", "link": "https://t.me/GetClient/10952", "text": "Ищут 10 человек, чтобы собирали чат-ботов по шаблону, как пазлы.\n\nЗП: от 5-9000₽ за вечер.\nЗанятость: 3-4 часа в день.\nОпыт: не нужен.\n\nВсё, что нужно для старта — запустить бота \n👉 @other_digital_bot", "draft": "Здравствуйте!\n\nУвидел, что вам нужен Telegram-бот, готов взяться. Сделаю бота на Python (aiogram): продумаю сценарии и логику диалога, подключу базу данных, при необходимости - приём оплаты, рассылки и уведомления, соберу простую аналитику по действиям пользователей. Работаю по короткому ТЗ, с фиксированной ценой и сроком, держу на связи на каждом этапе и не пропадаю после сдачи. Небольшой бот обычно занимает 3-5 дней, задачу покрупнее разобью на понятные этапы.\n\nПортфолио: lev-dev-tech.github.io\n\nРасскажите подробнее, что должен уметь бот, - предложу оптимальное решение и назову цену.", "isNew": true}];
+const DATA = [];
 function checkpw(){
   const v=document.getElementById('pw').value;
   if(v===PW){try{localStorage.setItem('leadpw',v)}catch(e){}; open_app();}
