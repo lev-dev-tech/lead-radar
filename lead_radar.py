@@ -716,9 +716,13 @@ def main() -> None:
     hot = collect_hot()
     inbox = load_inbox()
     new_links = {h["link"] for h in hot if h["link"] and h["link"] not in seen}
-    write_public_html(hot, new_links)
+    # Защита: не затирать сайт пустой страницей, если парсинг вернул 0 заказов
+    # (например, аккаунт временно ограничен). Оставляем прошлую рабочую версию.
+    if hot:
+        write_public_html(hot, new_links)
+    else:
+        print("[radar] Заказов 0 — публичный сайт НЕ переписываю, оставляю прошлую версию.")
     if cloud:
-        # В облаке нет ни локального приложения, ни Obsidian — только публичный сайт.
         n_new, n_all = len(new_links), len(hot)
     else:
         write_html(hot, new_links, inbox)
