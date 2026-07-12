@@ -620,7 +620,6 @@ function checkpw(){
   else document.getElementById('err').textContent='Неверный пароль';
 }
 document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')checkpw()});
-try{if(localStorage.getItem('leadpw')===PW) open_app();}catch(e){}
 function open_app(){
   document.getElementById('gate').style.display='none';
   document.getElementById('app').style.display='block';
@@ -664,6 +663,8 @@ function render(){
 }
 function copy(id,btn){navigator.clipboard.writeText(document.getElementById(id).textContent)
   .then(()=>{const o=btn.textContent;btn.textContent='✅ Скопировано';setTimeout(()=>btn.textContent=o,1400)})}
+// Авто-вход, если пароль уже сохранён (в самом конце — после инициализации всех переменных)
+try{if(localStorage.getItem('leadpw')===PW) open_app();}catch(e){}
 </script>
 </body>
 </html>"""
