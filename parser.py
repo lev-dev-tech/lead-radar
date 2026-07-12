@@ -12,8 +12,9 @@ from openpyxl.styles import Font, Alignment, PatternFill
 import config
 
 # Выбор аккаунта: локально — основной (папка «Вакансии»), в облаке (GitHub Actions)
-# — расходный (RADAR_ACCOUNT=burner), он читает каналы из config.CHANNELS.
-if os.getenv("RADAR_ACCOUNT", "lev").lower() == "burner":
+# — расходный (RADAR_ACCOUNT=burner), он читает урезанный config.CHANNELS_CLOUD.
+IS_BURNER = os.getenv("RADAR_ACCOUNT", "lev").lower() == "burner"
+if IS_BURNER:
     SESSION, ACC_API_ID, ACC_API_HASH = (
         config.BURNER_SESSION, config.BURNER_API_ID, config.BURNER_API_HASH)
 else:
@@ -181,11 +182,12 @@ async def main():
     me = await client.get_me()
     print(f"[+] Авторизация успешна: @{me.username}")
 
-    peers = await get_folder_peers(client)
+    peers = await get_folder_peers(client) if not IS_BURNER else None
     if not peers:
-        channels = getattr(config, "CHANNELS", [])
+        channels = config.CHANNELS_CLOUD if IS_BURNER else getattr(config, "CHANNELS", [])
         if channels:
-            print(f"[+] Папки нет — беру {len(channels)} каналов из config.CHANNELS")
+            src = "CHANNELS_CLOUD (облако)" if IS_BURNER else "config.CHANNELS"
+            print(f"[+] Беру {len(channels)} каналов из {src}")
             peers = channels
         else:
             await client.disconnect()
@@ -200,6 +202,8 @@ async def main():
     dupes = 0
 
     for peer in peers:
+        if IS_BURNER:
+            await asyncio.sleep(2)   # пауза между каналами — чтобы Telegram не душил новый аккаунт
         entity = None
         try:
             entity = await client.get_entity(peer)

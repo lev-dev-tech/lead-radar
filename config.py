@@ -55,6 +55,18 @@ CHANNELS = [
     "udalenka_chat_vakansii",
 ]
 
+# Урезанный список для ОБЛАКА (расходный аккаунт): самые продуктивные по тех-заказам.
+# Меньше каналов = меньше резолвов = Telegram реже душит новый аккаунт с серверного IP.
+CHANNELS_CLOUD = [
+    "mari_vakansii", "mari_vakansiii", "freelance_chatik0", "poiskfreelance",
+    "profiwork", "jobospherechat", "influencersoffuture", "Freelance_grooup",
+    "pixeltechspec", "workchatbuzines", "workk_onchat", "freelance_vacancii",
+    "posibleworks", "JobDelivery", "board_axolotl", "FreeWorkFeed",
+    "targetsmmvakansii", "vakansiitelegramm", "freelancetaverna", "frilancer_na_divane",
+    "ewoxchat", "ggfreelancechat", "proffreelancee", "search_techspec",
+    "vakansii_ai", "IT_jobs_group", "talentedpeoples", "remote_freework",
+]
+
 # === ТОЛЬКО ЭТИ ТЕМЫ НАС ИНТЕРЕСУЮТ ===
 TECH_KEYWORDS = [
     # техспец
